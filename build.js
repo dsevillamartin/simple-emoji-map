@@ -17,7 +17,8 @@ const twemoji = require('twemoji');
 const getConfig = require('./src/config');
 
 const outputPath = path.resolve(__dirname, 'generated/emojis.json');
-const data = require('emojibase-data/en/compact.json');
+const skinsOutputPath = path.resolve(__dirname, 'generated/skins.json');
+const data = require('emojibase-data/en/data.json');
 
 const alternative = {
     '👁️‍🗨️': '👁‍🗨',
@@ -33,11 +34,14 @@ module.exports = async () => {
     const shortnames = config.shortnames;
 
     const emojis = {};
+    const skinEmojis = {};
     const used = [];
+    const usedSkins = [];
     const ignored = [];
+    const ignoredSkins = [];
 
     for (let e of data) {
-        const emoji = alternative[e.unicode] || e.unicode;
+        const emoji = alternative[e.emoji] || e.emoji;
         const emojiCode = getEmojiIconCode(emoji);
 
         if (
@@ -47,6 +51,26 @@ module.exports = async () => {
         ) {
             ignored.push(emoji);
             continue;
+        }
+
+        if (e.skins) {
+            for (let skin of e.skins) {
+                const emoji = skin.emoji;
+                const emojiCode = getEmojiIconCode(emoji);
+
+                if (
+                    config.regex &&
+                    skin.shortcodes.filter(e => !config.regex.test(e)).length ===
+                    skin.shortcodes.length
+                ) {
+                    ignoredSkins.push(emoji);
+                    continue;
+                }
+
+                const key = type === TYPES.EMOJI ? emoji : emojiCode;
+                skinEmojis[key] = skin.shortcodes.concat(shortnames[emojiCode] || []);
+                usedSkins.push(skinEmojis);
+            }
         }
 
         const key = type === TYPES.EMOJI ? emoji : emojiCode;
@@ -62,6 +86,8 @@ module.exports = async () => {
     }
 
     fs.writeFileSync(outputPath, JSON.stringify(emojis));
+
+    fs.writeFileSync(skinsOutputPath, JSON.stringify(skinEmojis));
 
     return { ignored, used };
 

@@ -13,11 +13,11 @@
   },
   "dependencies": {
     "cosmiconfig": "^5.2.1",
-    "emojibase-data": "^4.0.0",
-    "twemoji": "^12.1.2"
+    "emojibase-data": "^4.2.1",
+    "twemoji": "^12.1.5"
   },
   "devDependencies": {
-    "prettier": "^1.18.2"
+    "prettier": "^1.19.1"
   },
   "bin": {
     "simple-emoji-map": "build.js"
