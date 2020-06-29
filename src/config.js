@@ -1,4 +1,4 @@
-const cosmiconfig = require('cosmiconfig');
+const { cosmiconfig } = require('cosmiconfig');
 const { name } = require('../package.json');
 
 const explorer = cosmiconfig(name, {
