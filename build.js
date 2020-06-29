@@ -46,7 +46,7 @@ module.exports = async () => {
 
         if (
             config.regex &&
-            e.shortcodes.filter(e => !config.regex.test(e)).length ===
+            e.shortcodes.filter((e) => !config.regex.test(e)).length ===
                 e.shortcodes.length
         ) {
             ignored.push(emoji);
@@ -60,15 +60,17 @@ module.exports = async () => {
 
                 if (
                     config.regex &&
-                    skin.shortcodes.filter(e => !config.regex.test(e)).length ===
-                    skin.shortcodes.length
+                    skin.shortcodes.filter((e) => !config.regex.test(e))
+                        .length === skin.shortcodes.length
                 ) {
                     ignoredSkins.push(emoji);
                     continue;
                 }
 
                 const key = type === TYPES.EMOJI ? emoji : emojiCode;
-                skinEmojis[key] = skin.shortcodes.concat(shortnames[emojiCode] || []);
+                skinEmojis[key] = skin.shortcodes.concat(
+                    shortnames[emojiCode] || []
+                );
                 usedSkins.push(skinEmojis);
             }
         }
