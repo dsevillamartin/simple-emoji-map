@@ -49,9 +49,9 @@ For example, if you want `car` to show the emoji for `red_car` (`1f697`), the fi
 
 ```json
 {
-  "shortnames": {
-    "1f697": ["car"]
-  }
+    "shortnames": {
+        "1f697": ["car"]
+    }
 }
 ```
 
