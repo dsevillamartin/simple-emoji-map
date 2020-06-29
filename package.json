@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "cosmiconfig": "^5.2.1",
-    "emojibase-data": "^4.2.1",
-    "twemoji": "^12.1.5"
+    "emojibase-data": "^5.0.1",
+    "twemoji": "^13.0.0"
   },
   "devDependencies": {
     "prettier": "^1.19.1"
