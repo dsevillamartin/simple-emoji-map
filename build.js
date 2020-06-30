@@ -17,7 +17,7 @@ const twemoji = require('twemoji');
 const getConfig = require('./src/config');
 
 const outputPath = path.resolve(__dirname, 'generated/emojis.json');
-const skinsOutputPath = path.resolve(__dirname, 'generated/skins.json');
+const skinsOutputPath = path.resolve(__dirname, 'generated/variants.json');
 const data = require('emojibase-data/en/data.json');
 
 const alternative = {
@@ -41,7 +41,7 @@ module.exports = async () => {
     const ignoredSkins = [];
 
     for (let e of data) {
-        const emoji = alternative[e.emoji] || e.emoji;
+        const emoji = alternative[e.emoji] || e.emoji;  
         const emojiCode = getEmojiIconCode(emoji);
 
         if (
