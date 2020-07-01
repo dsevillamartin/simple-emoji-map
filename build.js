@@ -41,7 +41,7 @@ module.exports = async () => {
     const ignoredSkins = [];
 
     for (let e of data) {
-        const emoji = alternative[e.emoji] || e.emoji;  
+        const emoji = alternative[e.emoji] || e.emoji;
         const emojiCode = getEmojiIconCode(emoji);
 
         if (
