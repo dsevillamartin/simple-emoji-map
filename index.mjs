@@ -1,5 +1,3 @@
-import emojis from './generated/emojis.json';
-import variants from './generated/variants.json';
+export { default } from './generated/emojis.json';
 
-export default emojis;
-export { variants };
+export { default as variants } from './generated/variants.json';
