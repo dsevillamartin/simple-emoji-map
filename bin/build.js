@@ -1,22 +1,24 @@
+const chalk = require('chalk');
 const build = require('../build');
 
-process.stdout.write(
-    '\u001b[96m\u001b[1mGenerating simple emoji map...\u001b[0m'
-);
+console.log(chalk.cyan.bold('Generating simple emoji map...'));
 
-build().then(({ ignored, used }) => {
-    console.log('\u001b[96m\u001b[1m 👍\u001b[0m');
+build()
+    .then(({ ignored, used }) => {
+        if (ignored.length) {
+            console.warn(
+                chalk.cyan(`-> Used (${used.length}):`),
+                ...used.slice(0, 10)
+            );
+            console.warn(
+                chalk.cyan(`-> Ignored (${ignored.length}):`),
+                ...ignored.slice(0, 10)
+            );
+        }
 
-    if (ignored.length) {
-        console.warn(
-            `\u001b[96m-> Used (${used.length}):`,
-            ...used.slice(0, 10)
-        );
-        console.warn(
-            `\u001b[96m-> Ignored (${ignored.length}):`,
-            ...ignored.slice(0, 10)
-        );
-    }
-
-    console.log();
-});
+        console.log(chalk.cyan.bold('Success 👍'));
+    })
+    .catch((err) => {
+        console.error(err);
+        console.error(chalk.red.bold('Failed to generate emoji map.'));
+    });

@@ -18,7 +18,6 @@ const getConfig = require('./src/config');
 
 const outputPath = path.resolve(__dirname, 'generated/emojis.json');
 const skinsOutputPath = path.resolve(__dirname, 'generated/variants.json');
-const data = require('emojibase-data/en/data.json');
 
 const alternative = {
     '👁️‍🗨️': '👁‍🗨',
@@ -28,10 +27,63 @@ const TYPES = {
     CODEPOINT: 1,
 };
 
+const getShortcodes = (
+    { dataset, lang, fallbackDataset, fallbackLang },
+    defLang
+) => {
+    let shortcodeData, fallbackShortcodeData;
+
+    if (!lang) lang = defLang;
+    if (!fallbackLang) fallbackLang = defLang;
+
+    try {
+        shortcodeData = require(`emojibase-data/${lang}/shortcodes/${dataset}.json`);
+        fallbackShortcodeData =
+            fallbackDataset &&
+            require(`emojibase-data/${fallbackLang}/shortcodes/${fallbackDataset}.json`);
+    } catch (err) {
+        console.error(
+            `-> Failed to load shortcode data using '${dataset}' (${lang}) with '${fallbackDataset}' (${fallbackLang}) as a fallback`
+        );
+        throw err;
+    }
+
+    if (!fallbackShortcodeData) {
+        return shortcodeData;
+    }
+
+    const fallback = [];
+
+    for (const key in fallbackShortcodeData) {
+        if (!shortcodeData[key]) {
+            fallback.push(key);
+            shortcodeData[key] = fallbackShortcodeData[key];
+        }
+    }
+
+    if (fallback.length) {
+        console.warn(
+            `-> ${
+                fallback.length
+            } shortcodes not found in '${dataset}' (${lang}), fall back to 'emojibase' list:\n${fallback
+                .map(twemoji.convert.fromCodePoint)
+                .join(', ')}`
+        );
+    }
+
+    return shortcodeData;
+};
+
+const ensureArray = (data) => {
+    return Array.isArray(data) ? data : [data];
+};
+
 module.exports = async () => {
+    // general options
     const config = await getConfig();
     const type = TYPES[config.type.toUpperCase()] || TYPES.EMOJI;
     const shortnames = config.shortnames;
+    const regex = config.regex && new RegExp(config.regex);
 
     const emojis = {};
     const skinEmojis = {};
@@ -40,35 +92,45 @@ module.exports = async () => {
     const ignored = [];
     const ignoredSkins = [];
 
+    // shortcodes
+    const shortcodeConfig = config.shortcodes;
+
+    const shortcodeData = getShortcodes(shortcodeConfig, config.lang);
+    const data = require(`emojibase-data/${config.lang}/data.json`);
+
     for (let e of data) {
         const emoji = alternative[e.emoji] || e.emoji;
-        const emojiCode = getEmojiIconCode(emoji);
+        const emojiCode = e.hexcode;
 
-        if (
-            config.regex &&
-            e.shortcodes.filter((e) => !config.regex.test(e)).length ===
-                e.shortcodes.length
-        ) {
+        const shortcodes = ensureArray(shortcodeData[emojiCode.toUpperCase()]);
+
+        if (regex && shortcodes.find((e) => !regex.test(e))) {
             ignored.push(emoji);
             continue;
+        }
+
+        if (!shortcodes.length) {
+            console.warn(
+                `-> Could not find shortcodes for ${emoji} (${emojiCode})`
+            );
         }
 
         if (e.skins) {
             for (let skin of e.skins) {
                 const emoji = skin.emoji;
-                const emojiCode = getEmojiIconCode(emoji);
+                const emojiCode = skin.hexcode;
 
-                if (
-                    config.regex &&
-                    skin.shortcodes.filter((e) => !config.regex.test(e))
-                        .length === skin.shortcodes.length
-                ) {
+                const shortcodes = ensureArray(
+                    shortcodeData[emojiCode.toUpperCase()]
+                );
+
+                if (regex && shortcodes.find((e) => !regex.test(e))) {
                     ignoredSkins.push(emoji);
                     continue;
                 }
 
                 const key = type === TYPES.EMOJI ? emoji : emojiCode;
-                skinEmojis[key] = skin.shortcodes.concat(
+                skinEmojis[key] = shortcodes.concat(
                     shortnames[emojiCode] || []
                 );
                 usedSkins.push(skinEmojis);
@@ -77,7 +139,7 @@ module.exports = async () => {
 
         const key = type === TYPES.EMOJI ? emoji : emojiCode;
 
-        emojis[key] = e.shortcodes.concat(shortnames[emojiCode] || []);
+        emojis[key] = shortcodes.concat(shortnames[emojiCode] || []);
 
         used.push(emoji);
     }
@@ -92,11 +154,4 @@ module.exports = async () => {
     fs.writeFileSync(skinsOutputPath, JSON.stringify(skinEmojis));
 
     return { ignored, used };
-
-    function getEmojiIconCode(emoji) {
-        const U200D = String.fromCharCode(0x200d);
-        return twemoji.convert.toCodePoint(
-            emoji.indexOf(U200D) < 0 ? emoji.replace(/\uFE0F/g, '') : emoji
-        );
-    }
 };
