@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.1
+
+- Add shebang line to bin file
+- Update path of bin file to actual executable
+- Update Twemoji to v14
+
 ## v0.5.0
 
 **BREAKING**

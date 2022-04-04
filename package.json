@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "install": "node bin/build",
-    "lint": "prettier --single-quote --trailing-comma es5 --print-width 80 --tab-width 4 --write bin/* *.js *.mjs *.md src/**.js"
+    "lint": "prettier --single-quote --trailing-comma es5 --print-width 80 --tab-width 4 --write bin/* *.js *.mjs src/**.js"
   },
   "dependencies": {
     "chalk": "^4.1.2",
