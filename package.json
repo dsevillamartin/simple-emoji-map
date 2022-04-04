@@ -21,7 +21,7 @@
     "prettier": "^2.5.1"
   },
   "bin": {
-    "simple-emoji-map": "build.js"
+    "simple-emoji-map": "./bin/build.js"
   },
   "repository": {
     "type": "git",
