@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.0
+
+- Update `emojibase-data` to v15.0.0 (Emoji 15 & Unicode 15)
+  - Version jumped from v7 to v15 to stay with emoji versioning
+- Replace `twemoji` with `@twemoji/api`
+  - Twitter's Twemoji is no longer being maintained. This fork is maintained by the original maintainers that were laid off from Twitter.
+  - `twemoji` hasn't been updated for Emoji 15, but this package only uses its API for the fallback build process logging, so it won't affect the output
+
 ## v0.5.1
 
 - Add shebang line to bin file
