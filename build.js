@@ -13,7 +13,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const twemoji = require('twemoji');
+const twemoji = require('@twemoji/api');
 const getConfig = require('./src/config');
 
 const outputPath = path.resolve(__dirname, 'generated/emojis.json');
