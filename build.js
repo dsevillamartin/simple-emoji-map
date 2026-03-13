@@ -37,10 +37,14 @@ const getShortcodes = (
     if (!fallbackLang) fallbackLang = defLang;
 
     try {
-        shortcodeData = require(`emojibase-data/${lang}/shortcodes/${dataset}.json`);
+        shortcodeData = require(
+            `emojibase-data/${lang}/shortcodes/${dataset}.json`
+        );
         fallbackShortcodeData =
             fallbackDataset &&
-            require(`emojibase-data/${fallbackLang}/shortcodes/${fallbackDataset}.json`);
+            require(
+                `emojibase-data/${fallbackLang}/shortcodes/${fallbackDataset}.json`
+            );
     } catch (err) {
         console.error(
             `-> Failed to load shortcode data using '${dataset}' (${lang}) with '${fallbackDataset}' (${fallbackLang}) as a fallback`

@@ -1,5 +1,9 @@
 # Changelog
 
+## 17.0.0
+
+- Update `emojibase-data` to v17.0.0 (Emoji 17 & Unicode 17)
+
 ## v0.6.0
 
 - Update `emojibase-data` to v15.0.0 (Emoji 15 & Unicode 15)

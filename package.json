@@ -1,6 +1,6 @@
 {
   "name": "simple-emoji-map",
-  "version": "0.6.0",
+  "version": "1.0.0",
   "description": "A simple emoji map that can be built at any time",
   "main": "index.js",
   "module": "index.mjs",
@@ -8,17 +8,17 @@
   "author": "David Sevilla Martín",
   "license": "MIT",
   "scripts": {
-    "install": "node bin/build",
+    "postinstall": "node bin/build",
     "lint": "prettier --single-quote --trailing-comma es5 --print-width 80 --tab-width 4 --write bin/* *.js *.mjs src/**.js"
   },
   "dependencies": {
-    "@twemoji/api": "^14.1.2",
+    "@twemoji/api": "^17.0.2",
     "chalk": "^4.1.2",
-    "cosmiconfig": "^7.0.1",
-    "emojibase-data": "^15.0.0"
+    "cosmiconfig": "^9.0.1"
   },
   "devDependencies": {
-    "prettier": "^2.5.1"
+    "emojibase-data": "^17.0.0",
+    "prettier": "^3.8.1"
   },
   "bin": {
     "simple-emoji-map": "./bin/build.js"
